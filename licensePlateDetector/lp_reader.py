@@ -17,9 +17,13 @@ def detectLicensePlate(filename):
     #pprint(response.json())
     
     if response.json()["results"]:
-        return response.json()["results"][0]["plate"]
+        return {"plate_no":response.json()["results"][0]["plate"], "score":response.json()["results"][0]["score"]}
     return None
 
 
 if __name__=="__main__":
-    lp = detectLicensePlate("../textDetection/test_images/no_carPlate.jpg")
+    results = detectLicensePlate("../textDetection/test_images/no_carPlate.jpg")
+    if results is not None:
+        plate_no = results["plate_no"]
+        confidence_score = results["score"]
+        print (plate_no, confidence_score)
