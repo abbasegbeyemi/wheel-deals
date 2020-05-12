@@ -10,7 +10,7 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = os.urandom(16)
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = "postgres://riuqdpwpmaccqr:47dc38b05b263af1ace1d4dea6212fc302717ea9d60e97add443de84ab261f11@ec2-46-137-156-205.eu-west-1.compute.amazonaws.com:5432/dc2auqr27d21s3"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
