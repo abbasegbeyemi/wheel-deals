@@ -3,6 +3,7 @@ import cv2 as cv
 import math
 import argparse
 
+
 ############ Utility functions ############
 def decode(scores, geometry, scoreThresh):
     detections = []
@@ -32,7 +33,7 @@ def decode(scores, geometry, scoreThresh):
             score = scoresData[x]
 
             # If score is lower than threshold score, move to next x
-            if(score < scoreThresh):
+            if (score < scoreThresh):
                 continue
 
             # Calculate offset
@@ -47,17 +48,19 @@ def decode(scores, geometry, scoreThresh):
             w = x1_data[x] + x3_data[x]
 
             # Calculate offset
-            offset = ([offsetX + cosA * x1_data[x] + sinA * x2_data[x], offsetY - sinA * x1_data[x] + cosA * x2_data[x]])
+            offset = (
+            [offsetX + cosA * x1_data[x] + sinA * x2_data[x], offsetY - sinA * x1_data[x] + cosA * x2_data[x]])
 
             # Find points for rectangle
             p1 = (-sinA * h + offset[0], -cosA * h + offset[1])
-            p3 = (-cosA * w + offset[0],  sinA * w + offset[1])
-            center = (0.5*(p1[0]+p3[0]), 0.5*(p1[1]+p3[1]))
-            detections.append((center, (w,h), -1*angle * 180.0 / math.pi))
+            p3 = (-cosA * w + offset[0], sinA * w + offset[1])
+            center = (0.5 * (p1[0] + p3[0]), 0.5 * (p1[1] + p3[1]))
+            detections.append((center, (w, h), -1 * angle * 180.0 / math.pi))
             confidences.append(float(score))
 
     # Return detections and confidences
     return [detections, confidences]
+
 
 def textDetector(filename, debug=False):
     # Read and store arguments
@@ -70,11 +73,10 @@ def textDetector(filename, debug=False):
     # Load network
     net = cv.dnn.readNet(model)
 
-    
     outNames = []
     outNames.append("feature_fusion/Conv_7/Sigmoid")
     outNames.append("feature_fusion/concat_3")
-    
+
     frame = cv.imread(filename)
     if frame is None:
         raise Exception("invalid path to input image")
@@ -103,10 +105,10 @@ def textDetector(filename, debug=False):
         kWinName = "EAST: An Efficient and Accurate Scene Text Detector"
         cv.namedWindow(kWinName, cv.WINDOW_NORMAL)
 
-        #show window and bounding boxes for image..
+        # show window and bounding boxes for image..
 
         # Apply NMS
-        indices = cv.dnn.NMSBoxesRotated(boxes, confidences, confThreshold,nmsThreshold)
+        indices = cv.dnn.NMSBoxesRotated(boxes, confidences, confThreshold, nmsThreshold)
         for i in indices:
             # get 4 corners of the rotated rect
             vertices = cv.boxPoints(boxes[i[0]])
@@ -123,13 +125,13 @@ def textDetector(filename, debug=False):
         cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
         # Display the frame
-        cv.imshow(kWinName,frame)
+        cv.imshow(kWinName, frame)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
     return True if boxes and confidences else False
-    
+
 
 if __name__ == "__main__":
     isTextPresent = textDetector("test_images/carPlate.jpg")
-    #print (isTextPresent)
+    print(isTextPresent)
